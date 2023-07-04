@@ -35,7 +35,7 @@ function decompress_file() {
     ["gzip"]="gunzip"
     ["bzip2"]="bunzip2"
     ["Zip"]="unzip"
-    ["compress'd"]="tar -xf"
+    ["compress'd"]="tar -xzf"
     ["POSIX"]="tar -xf"  # my additional compression type
   )
 
