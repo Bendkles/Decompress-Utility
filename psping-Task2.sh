@@ -81,8 +81,38 @@ while [ "$count" -lt 0 ] || [ $ping_count -lt "$count" ]; do
     exit 1
   fi
   
+# Echo the pinging status
+if [ -z "$user" ]; then
+  echo "Pinging '$exe_name' for any user"
+else
+  echo "Pinging '$exe_name' for user '$user'"
+fi
+
+# Loop indefinitely or until the ping count is reached
+while [ "$count" -lt 0 ] || [ $ping_count -lt "$count" ]; do
+  # Count the number of live processes for the user and executable
+  live_count=$(pgrep -u "$user" "$exe_name" 2>/dev/null | wc -l)
+
+  # Check for errors in pgrep
+  if [ $? -ne 0 ]; then
+    echo "Error: Could not execute pgrep. Check permissions and executable name." >&2
+    exit 1
+  fi
+  
   # Echo the number of live processes
-  echo "$live_count"
+  if [ "$live_count" -eq 1 ]; then
+    echo "$exe_name: $live_count instance..."
+  else
+    echo "$exe_name: $live_count instances..."
+  fi
+
+  # Increment the ping count
+  ping_count=$((ping_count+1))
+
+  # Sleep for the specified timeout
+  sleep "$timeout"
+done
+
 
   # Increment the ping count
   ping_count=$((ping_count+1))
