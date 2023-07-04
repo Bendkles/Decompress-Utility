@@ -8,7 +8,7 @@ not_decompressed=0
 
 # Function to display help information
 function display_help() {
-  echo "Usage: $0 [FLAG] [FILE]"
+  echo "Usage: $0 [FLAG] [TARGET]"
   echo "Unpack compressed files."
   echo
   echo "Options:"
@@ -19,6 +19,7 @@ function display_help() {
   echo "Examples:"
   echo "  $0 file.gz"
   echo "  $0 -r directory"
+  echo "  $0 directory"
   exit 0
 }
 
@@ -35,7 +36,6 @@ function decompress_file() {
     ["gzip"]="gunzip"
     ["bzip2"]="bunzip2"
     ["Zip"]="unzip"
-    ["compress'd"]="tar -xzf"
     ["POSIX"]="tar -xf"  # my additional compression type
   )
 
@@ -70,6 +70,17 @@ function traverse_directory() {
   done < <(find "$dir" -type f -print0)
 }
 
+# Function to scan a directory (non-recursive) and decompress all archives in it
+function scan_directory() {
+  local dir="$1"
+
+  for file in "$dir"/*; do
+    if [[ -f "$file" ]]; then
+      decompress_file "$file"
+    fi
+  done
+}
+
 # Check if any arguments were provided
 if [ $# -eq 0 ]; then
   echo "Missing argument. Please provide a file or directory. For help use --help flag."
@@ -95,9 +106,13 @@ while (( "$#" )); do
       if [[ -d "$1" ]]; then
         if $recursive; then
           traverse_directory "$1"
+        else
+          scan_directory "$1"
         fi
       elif [[ -f "$1" ]]; then
         decompress_file "$1"
+      else
+        echo "Error: '$1' is not a valid file or directory."
       fi
       shift
       ;;
