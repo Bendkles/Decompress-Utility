@@ -36,7 +36,9 @@ function decompress_file() {
     ["gzip"]="gunzip"
     ["bzip2"]="bunzip2"
     ["Zip"]="unzip"
-    ["POSIX"]="tar -xf"  # my additional compression type
+    ["RAR"]="unrar"
+    ["TAR"]="tar -xf"
+    ["POSIX"]="tar -xf" 
   )
 
   # Get the decompression command for the compression type
