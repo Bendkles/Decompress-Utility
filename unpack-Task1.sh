@@ -44,7 +44,7 @@ function decompress_file() {
 
   # If the compression type is recognized, decompress the file
   if [[ -n $command ]]; then
-    if $command "$file"; then
+    if $command -f "$file"; then
       ((decompressed++))
       if $verbose; then
         echo "Unpacked $file"
