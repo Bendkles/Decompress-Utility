@@ -34,9 +34,13 @@ function decompress_file() {
   # Define an associative array mapping compression types to decompression commands
   declare -A decompress_commands=(
     ["gzip"]="gunzip"
+    ["gzip"]="gzip -d"
+    ["bzip2"]="bzip2 -d"
     ["bzip2"]="bunzip2"
     ["Zip"]="unzip"
-    ["POSIX"]="tar -xf"  # my additional compression type
+    ["RAR"]="unrar x"
+    ["TAR"]="tar -xvf"
+    ["POSIX"]="tar -xf" 
   )
 
   # Get the decompression command for the compression type
