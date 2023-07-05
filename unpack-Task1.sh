@@ -36,7 +36,7 @@ function decompress_file() {
     ["gzip"]="gunzip"
     ["bzip2"]="bunzip2"
     ["Zip"]="unzip"
-    ["RAR"]="unrar"
+    ["RAR"]="unrar x -y"
     ["TAR"]="tar -xf"
     ["POSIX"]="tar -xf" 
   )
@@ -46,19 +46,19 @@ function decompress_file() {
 
   # If the compression type is recognized, decompress the file
   if [[ -n $command ]]; then
-    if $command -f "$file"; then
+    if $command "$file"; then
       ((decompressed++))
       if $verbose; then
-        echo "Unpacked $file"
+        echo "Successfully unpacked $file to $(pwd)"
       fi
     else
       ((not_decompressed++))
-      echo "Error: Failed to decompress $file, please install the compression library $command first" 
+      echo "Error: Failed to decompress $file. Please ensure the compression library for $compression is installed." 
     fi
   else
     ((not_decompressed++))
     if $verbose; then
-      echo "Ignoring $file because it is not a recognized compressed file or it cannot be decompressed"
+      echo "Ignoring $file because it is not a recognized compressed file or it cannot be decompressed."
     fi
   fi
 }
